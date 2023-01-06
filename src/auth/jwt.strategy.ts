@@ -31,5 +31,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     return user;
+    //Guard 미들웨어를 통해 user를 req에서 가져올 수 있다.
   }
 }

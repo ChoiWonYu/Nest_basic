@@ -9,14 +9,17 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { BoardStatus } from './board-status.enum';
 import { CreateBoardDTO } from './dto/create-board-dto';
 import { BoardStatuValidationPipe } from './pipe/board-status-validation.pipe';
 import { Board } from './board.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('boards')
+@UseGuards(AuthGuard())
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
