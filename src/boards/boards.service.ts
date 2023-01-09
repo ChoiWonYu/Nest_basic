@@ -2,20 +2,35 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BoardStatus } from './board-status.enum';
 import * as uuid from 'uuid';
 import { CreateBoardDTO } from './dto/create-board-dto';
-import { BoardRepository } from './board.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { User } from 'src/auth/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BoardsService {
   constructor(
-    @InjectRepository(BoardRepository)
-    private boardRepository: BoardRepository,
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>,
   ) {}
 
+  async CreateBoard(
+    createBoardDTO: CreateBoardDTO,
+    user: User,
+  ): Promise<Board> {
+    const { title, description } = createBoardDTO;
+    const newBoard = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+      user,
+    });
+    await this.boardRepository.save(newBoard);
+    return newBoard;
+  }
+
   createBoard(createBoardDTO: CreateBoardDTO, user: User): Promise<Board> {
-    return this.boardRepository.createBoard(createBoardDTO, user);
+    return this.CreateBoard(createBoardDTO, user);
   }
 
   async getBoardById(id: number): Promise<Board> {

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { BoardRepository } from 'src/boards/board.repository';
-import { TypeOrmExModule } from 'src/typeorm-ex.module';
+import { Board } from './board.entity';
 import { BoardsController } from './boards.controller';
 import { BoardsService } from './boards.service';
 
 @Module({
-  imports: [TypeOrmExModule.forCustomRepository([BoardRepository]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Board]), AuthModule],
   controllers: [BoardsController],
   providers: [BoardsService],
+  exports: [TypeOrmModule],
 })
 export class BoardsModule {}

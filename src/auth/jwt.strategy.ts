@@ -2,17 +2,17 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Repository } from 'typeorm';
 import { IPayload } from './type/PayloadType';
 import { User } from './user.entity';
-import { UserRepository } from './user.repository';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   //PassportStrategy 클래스 상속
   //Strategy인자를 받는다. passport를 사용할 때 기본 strategy가 jwt이기 때문
   constructor(
-    @InjectRepository(UserRepository)
-    private userRepository: UserRepository, //토큰이 유효한지 확인한 후 payload 내부 user 이름으로 repository를 통해 resource를 가져올 것이므로 주입해준다.
+    @InjectRepository(User)
+    private userRepository: Repository<User>, //토큰이 유효한지 확인한 후 payload 내부 user 이름으로 repository를 통해 resource를 가져올 것이므로 주입해준다.
   ) {
     super({
       //PassportStrategy 클래스를 상속하면 반드시 super를 통해 필수 옵션을 전달해야 한다.
